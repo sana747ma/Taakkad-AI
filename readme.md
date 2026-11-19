@@ -1,108 +1,49 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تأكّد AI | كاشف الروابط والمواقع والرسائل الوهمية</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
+# تأكّد AI (Ta'akkad AI) — درع الحماية الذكي لكشف الروابط والمواقع الوهمية
 
-  <header class="navbar">
-    <div class="container nav-content">
-      <div class="logo">
-        <span class="shield-icon">🛡️</span>
-        <div>
-          <h1>تأكّد <span>AI</span></h1>
-          <p>الكشف الذكي عن الروابط والمواقع الوهمية وحماية المجتمع</p>
-        </div>
-      </div>
-      <div class="badges">
-        <span class="badge">Privacy-First 🔒</span>
-        <span class="badge">SCAMSHIELD AI</span>
-      </div>
-    </div>
-  </header>
+نموذج أولي (MVP) مطوّر ضمن هاكاثون **SCAMSHIELD AI** (بالتعاون بين شرطة أبوظبي وأكاديمية 42 أبوظبي — نوفمبر 2026)، منسجم مع توجهات **استراتيجية شرطة أبوظبي 2026–2030** في تعزيز الأمن والجاهزية والوقاية من التهديدات الرقمية والاحتيال المالي.
 
-  <main class="container main-section">
-    <section class="hero-card">
-      <h2>افحص الروابط والمواقع والرسائل المشبوهة قبل أن تثق</h2>
-      <p class="subtitle">
-        الصق أي رابط موقع إلكتروني، رسالة واتساب، أو رسالة نصية (SMS) لفحص مؤشرات المواقع الوهمية وانتحال الصفة فوراً.
-      </p>
+**فريق العمل (تأكّد AI):** سنا حكمت، أم سلمة هشام، حنان خالد — طالبات سنة ثالثة، تخصص علوم المكتبات والمعلومات، جامعة الوصل.
 
-      <div class="input-box">
-        <textarea id="messageInput" rows="5" placeholder="الصق رابط الموقع أو نص الرسالة المشبوهة هنا..."></textarea>
+---
 
-        <div class="samples-bar">
-          <span>تجربة سريعة:</span>
-          <button type="button" class="sample-btn danger" onclick="loadSample('bank')">🚨 رسالة بنك مزيفة</button>
-          <button type="button" class="sample-btn danger" onclick="loadSample('fakeSite')">🌐 موقع وهمي ينتحل جهة رسمية</button>
-          <button type="button" class="sample-btn warning" onclick="loadSample('delivery')">📦 رابط توصيل مشبوه</button>
-          <button type="button" class="sample-btn safe" onclick="loadSample('safe')">✅ رسالة آمنة</button>
-        </div>
+## 1. المشكلة والحل
 
-        <div class="action-buttons">
-          <button type="button" id="analyzeBtn" class="primary-btn" onclick="analyzeContent()">
-            🔍 تحليل وفحص الآن
-          </button>
-          <button type="button" class="secondary-btn" onclick="clearAll()">
-            مسح
-          </button>
-        </div>
-      </div>
+### المشكلة
+تنتشر بكثرة الروابط والمواقع الإلكترونية الوهمية التي تنتحل صفة الجهات الرسمية والبنوك وشركات التوصيل عبر الرسائل النصية والواتساب، وتعتمد على الاستعجال أو التهديد (مثل ادعاء إيقاف البطاقة أو طلب رمز التحقق OTP أو دفع رسوم صغيرة)، مما يزيد من خطورتها على الفئات الأقل خبرة تقنية مثل كبار السن.
 
-      <div class="privacy-note">
-        🔒 <strong>حماية الخصوصية:</strong> يتم إخفاء أرقام الهواتف والبطاقات والهويات تلقائياً قبل أي تحليل لضمان سرية بياناتك.
-      </div>
-    </section>
+### الحل
+يوفّر تطبيق **تأكّد AI** واجهة ويب فورية وسهلة الاستخدام تتيح للمستخدم لصق أي رابط أو رسالة (أو تجربة سيناريوهات جاهزة بنقرة واحدة) والحصول على:
+- **مؤشر خطورة واضح ونسبة مئوية** مع تصنيف مباشر (**آمن**، **مشبوه**، أو **رابط أو محتوى احتيالي / خطورة عالية**).
+- **تحليل مفصل للروابط والمحتوى** يشمل فحص بروتوكول `http://` غير المشفر، الامتدادات أو الروابط المختصرة الشائعة في المواقع الوهمية، الكلمات الموحية بانتحال جهة رسمية خارج النطاق الرسمي المعتمد، والكلمات المرتبطة بالاحتيال والاستعجال.
+- **خطوات تصرف عملية فورية** وزر توجيه مباشر نحو قنوات الإبلاغ الرسمية (مثل شرطة أبوظبي / خدمة أمان).
+- **تصميم يراعي الخصوصية (`Privacy-First`):** إخفاء تلقائي للبيانات الرقمية الحساسة (مثل أرقام البطاقات وأرقام الهواتف) قبل المعالجة وعرض تنبيه للمستخدم.
+- **قراءة صوتية مختصرة وواضحة** لدعم كبار السن وسهولة الفهم.
 
-    <section id="resultSection" class="result-card hidden">
-      <div class="result-header">
-        <div id="statusBadge" class="status-badge">جاري التحليل...</div>
-        <button type="button" id="speakBtn" class="voice-btn" onclick="speakResult()">
-          🔊 استمع للنتيجة (وضع كبار السن)
-        </button>
-      </div>
+---
 
-      <div class="risk-meter-container">
-        <div class="risk-labels">
-          <span>مؤشر الخطورة المقدر</span>
-          <strong id="riskScoreText">0%</strong>
-        </div>
-        <div class="progress-bar">
-          <div id="riskBarFill" class="progress-fill"></div>
-        </div>
-      </div>
+## 2. الاختيارات التقنية، المفاضلات، والتطوير المستقبلي
 
-      <div class="result-grid">
-        <div class="info-box">
-          <h3>🧠 لماذا هذه النتيجة؟ (تحليل الروابط والمحتوى)</h3>
-          <ul id="reasonsList"></ul>
-        </div>
+### الاختيارات التقنية
+- **تطبيق ويب خفيف وسريع (`HTML5`، `CSS3`، `JavaScript`):** تم اختياره ليعمل مباشرة في المتصفح على مختلف الأجهزة دون الحاجة لتنصيب معقد أو تكاليف استضافة.
+- **نهج يراعي الخصوصية (`Privacy-First`):** تقليل تعريض بيانات المستخدم وإخفاء الأنماط الرقمية الحساسة تلقائياً.
 
-        <div class="info-box advice-box">
-          <h3>🛡️ كيف تتصرف الآن؟</h3>
-          <ul id="adviceList"></ul>
-        </div>
-      </div>
+### المفاضلات الحالية (Trade-offs)
+- يعتمد النموذج الأولي الحالي على قواعد تحليل الكلمات والأنماط والروابط المحلية دون ربط بقاعدة بيانات خارجية حية للتهديدات أو نموذج لغوي سحابي متقدم، وذلك لضمان السرعة والمجانية والجاهزية والموثوقية خلال الهاكاثون.
+- تعتمد القراءة الصوتية على دعم المتصفح وأصوات اللغة العربية المتوفرة على الجهاز، وتم تصميمها لتكون مختصرة وواضحة لكبار السن.
 
-      <div id="piiBox" class="pii-alert hidden"></div>
+### ماذا سنفعل بوقت إضافي؟
+- دمج نموذج ذكاء اصطناعي متقدم لتحليل السياقات واللهجات بدقة أعلى.
+- إضافة فحص أعمق للروابط وإعادة التوجيه وفحص النصوص من الصور (OCR).
+- تحديث مستمر لأنماط الاحتيال الجديدة بالتكامل مع الجهات المعنية.
 
-      <div class="report-footer">
-        <p>هل رصدت رابطاً أو موقعاً وهمياً؟ ساهم في حماية المجتمع بالإبلاغ الفوري:</p>
-        <a href="https://www.adpolice.gov.ae" target="_blank" rel="noopener noreferrer" class="report-btn">
-          📢 التوجه لقنوات الإبلاغ الرسمية (خدمة أمان - شرطة أبوظبي)
-        </a>
-      </div>
-    </section>
-  </main>
+---
 
-  <footer class="footer">
-    <p>تم التطوير ضمن هاكاثون SCAMSHIELD AI — فريق تأكّد AI (2026)</p>
-  </footer>
+## 3. طريقة تشغيل المشروع
 
-  <script src="app.js"></script>
-</body>
-</html>
+1. تأكدي من وجود الملفات التالية في مجلد واحد:
+   - `index.html`
+   - `style.css`
+   - `app.js`
+   - `readme.md`
+2. افتحي ملف `index.html` في أي متصفح ويب حديث.
+3. الصقي رابط الموقع أو نص الرسالة في مربع الإدخال (أو اختاري أحد أزرار التجربة السريعة)، ثم اضغطي **«تحليل وفحص الآن»**.
