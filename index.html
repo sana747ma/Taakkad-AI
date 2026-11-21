@@ -3,104 +3,284 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تأكّد AI | كاشف الروابط والمواقع والرسائل الوهمية</title>
+  <title>تأكّد AI | منظومة الحماية من الاحتيال الرقمي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <header class="navbar">
-    <div class="container nav-content">
-      <div class="logo">
-        <span class="shield-icon">🛡️</span>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <span class="brand-badge">AI</span>
         <div>
-          <h1>تأكّد <span>AI</span></h1>
-          <p>الكشف الذكي عن الروابط والمواقع الوهمية وحماية المجتمع</p>
+          <h1>تأكّد AI</h1>
+          <p>منظومة الحماية الذكية من الروابط والرسائل والمكالمات الاحتيالية</p>
         </div>
       </div>
-      <div class="badges">
-        <span class="badge">Privacy-First 🔒</span>
-        <span class="badge">SCAMSHIELD AI</span>
+
+      <div class="topbar-actions">
+        <button id="seniorModeBtn" class="btn btn-outline" type="button" aria-pressed="false">
+          👴 وضع كبار السن: مغلق
+        </button>
       </div>
     </div>
   </header>
 
-  <main class="container main-section">
-    <section class="hero-card">
-      <h2>افحص الروابط والمواقع والرسائل المشبوهة قبل أن تثق</h2>
-      <p class="subtitle">
-        الصق أي رابط موقع إلكتروني، رسالة واتساب، أو رسالة نصية (SMS) لفحص مؤشرات المواقع الوهمية وانتحال الصفة فوراً.
-      </p>
+  <nav class="tabs-bar" aria-label="أقسام المنصة">
+    <div class="container tabs-list" role="tablist">
+      <button class="tab-btn active" data-tab="scannerTab" role="tab" aria-selected="true" type="button">
+        🔍 فحص الرسائل والروابط
+      </button>
+      <button class="tab-btn" data-tab="callerTab" role="tab" aria-selected="false" type="button">
+        📞 فحص الأرقام والمكالمات
+      </button>
+      <button class="tab-btn" data-tab="simulatorTab" role="tab" aria-selected="false" type="button">
+        🎮 محاكي المناعة الرقمية
+      </button>
+      <button class="tab-btn emergency-tab" data-tab="emergencyTab" role="tab" aria-selected="false" type="button">
+        🚨 بروتوكول الطوارئ
+      </button>
+    </div>
+  </nav>
 
-      <div class="input-box">
-        <textarea id="messageInput" rows="5" placeholder="الصق رابط الموقع أو نص الرسالة المشبوهة هنا..."></textarea>
+  <main class="container main-content">
+    <!-- القسم الأول: فحص الرسائل والروابط -->
+    <section id="scannerTab" class="tab-panel active">
+      <div class="card">
+        <div class="card-header">
+          <h2>فحص فوري للرسائل والروابط</h2>
+          <span class="pill pill-privacy">🔒 تعمية البيانات الحساسة محلياً</span>
+        </div>
+        <p class="muted">
+          الصق الرسالة أو الرابط هنا. يتم إخفاء أرقام البطاقات والهويات والهواتف محلياً قبل التحليل لحماية خصوصيتك.
+        </p>
 
-        <div class="samples-bar">
-          <span>تجربة سريعة:</span>
-          <button type="button" class="sample-btn danger" onclick="loadSample('bank')">🚨 رسالة بنك مزيفة</button>
-          <button type="button" class="sample-btn danger" onclick="loadSample('fakeSite')">🌐 موقع وهمي ينتحل جهة رسمية</button>
-          <button type="button" class="sample-btn warning" onclick="loadSample('delivery')">📦 رابط توصيل مشبوه</button>
-          <button type="button" class="sample-btn safe" onclick="loadSample('safe')">✅ رسالة آمنة</button>
+        <div class="presets">
+          <span class="presets-label">سيناريوهات جاهزة للتجربة:</span>
+          <button class="chip" type="button" data-preset="bank">رسالة بنك عاجلة + OTP</button>
+          <button class="chip" type="button" data-preset="gov">انتحال جهة رسمية</button>
+          <button class="chip" type="button" data-preset="delivery">رابط توصيل مشبوه</button>
+          <button class="chip" type="button" data-preset="safe">رسالة آمنة</button>
         </div>
 
-        <div class="action-buttons">
-          <button type="button" id="analyzeBtn" class="primary-btn" onclick="analyzeContent()">
-            🔍 تحليل وفحص الآن
-          </button>
-          <button type="button" class="secondary-btn" onclick="clearAll()">
-            مسح
-          </button>
+        <label for="messageInput" class="field-label">نص الرسالة أو الرابط</label>
+        <textarea
+          id="messageInput"
+          rows="5"
+          placeholder="مثال: عزيزي العميل تم إيقاف بطاقتك، حدّث بياناتك وأرسل رمز OTP عبر http://uae-bank-verify-login.xyz"
+        ></textarea>
+
+        <div class="btn-row">
+          <button id="analyzeBtn" class="btn btn-primary" type="button">تحليل الآن</button>
+          <button id="clearScanBtn" class="btn btn-ghost" type="button">مسح</button>
         </div>
       </div>
 
-      <div class="privacy-note">
-        🔒 <strong>حماية الخصوصية:</strong> يتم إخفاء أرقام الهواتف والبطاقات والهويات تلقائياً قبل أي تحليل لضمان سرية بياناتك.
+      <div id="scanResultCard" class="card result-card hidden" aria-live="polite">
+        <div class="result-top">
+          <div>
+            <span id="riskBadge" class="risk-badge">تقييم الخطورة</span>
+            <h3 id="riskTitle">نتيجة التحليل</h3>
+          </div>
+          <div class="score-box">
+            <span class="score-label">نسبة الخطورة</span>
+            <strong id="riskScore">0%</strong>
+          </div>
+        </div>
+
+        <p id="riskSummary" class="result-summary"></p>
+
+        <div class="sub-box">
+          <h4>النسخة المعالجة بعد إخفاء البيانات الحساسة (محلياً):</h4>
+          <p id="maskedPreview" class="code-box"></p>
+        </div>
+
+        <div class="sub-box">
+          <h4>المؤشرات المكتشفة:</h4>
+          <ul id="reasonsList" class="clean-list"></ul>
+        </div>
+
+        <div class="sub-box tip-box">
+          <h4>لماذا هذا خطر وكيف تكتشفه بنفسك؟</h4>
+          <p id="educationTip"></p>
+        </div>
+
+        <div class="btn-row wrap">
+          <button id="speakScanBtn" class="btn btn-secondary" type="button">
+            🔊 قراءة صوتية مبسطة
+          </button>
+          <button id="whatsappShareBtn" class="btn btn-whatsapp" type="button">
+            👨‍👩‍👧 الدرع العائلي (تنبيه واتساب)
+          </button>
+          <button id="copyAlertBtn" class="btn btn-outline" type="button">
+            📋 نسخ بطاقة التحذير
+          </button>
+        </div>
+
+        <div id="familyAlertBox" class="family-box hidden">
+          <label for="familyAlertText" class="field-label">نص التحذير الجاهز للعائلة:</label>
+          <textarea id="familyAlertText" rows="4" readonly></textarea>
+          <div class="btn-row">
+            <a id="waDirectLink" class="btn btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer">
+              إرسال مباشرة إلى واتساب
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="resultSection" class="result-card hidden">
-      <div class="result-header">
-        <div id="statusBadge" class="status-badge">جاري التحليل...</div>
-        <button type="button" id="speakBtn" class="voice-btn" onclick="speakResult()">
-          🔊 استمع للنتيجة (وضع كبار السن)
-        </button>
+    <!-- القسم الثاني: فحص الأرقام الغريبة والمكالمات -->
+    <section id="callerTab" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <h2>فحص الأرقام الغريبة وسلوك المكالمات</h2>
+          <span class="pill">📞 رصد الاحتيال الهاتفي (Vishing)</span>
+        </div>
+        <p class="muted">
+          تحقق من نمط الرقم ومقدماته وطريقة حديث المتصل ومطابقتها مع البلاغات المسجلة، أو أضف بلاغاً لتنبيه المجتمع.
+        </p>
+
+        <div class="grid-2">
+          <div>
+            <label for="phoneInput" class="field-label">رقم الهاتف أو الرمز الظاهر</label>
+            <input
+              id="phoneInput"
+              type="text"
+              placeholder="مثال: +44 7900 123456 أو 050xxxxxxx"
+            />
+          </div>
+
+          <div>
+            <label for="callBehaviorSelect" class="field-label">سلوك أو طلب المتصل</label>
+            <select id="callBehaviorSelect">
+              <option value="otp">طلب رمز التحقق (OTP) أو كلمة مرور أو CVV</option>
+              <option value="id_update">ادعى أنه جهة أمنية/حكومية وطلب تحديث الهوية أو غرامة</option>
+              <option value="threat">تهديد بإيقاف الحساب البنكي أو اتخاذ إجراء فوري</option>
+              <option value="prize_loan">عرض جائزة أو قرض سريع أو استثمار مضمون</option>
+              <option value="normal_inquiry">استفسار عادي بدون طلب بيانات سرية أو ضغط</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="callNotesInput" class="field-label">ملاحظات إضافية عن المكالمة (اختياري)</label>
+        <input
+          id="callNotesInput"
+          type="text"
+          placeholder="مثال: قال المتصل إنه من البنك ويحتاج تأكيد الهوية خلال دقائق..."
+        />
+
+        <div class="btn-row">
+          <button id="checkCallerBtn" class="btn btn-primary" type="button">فحص الرقم والمكالمة</button>
+          <button id="reportCallerBtn" class="btn btn-outline" type="button">
+            🚩 تسجيل بلاغ في السجل المحلي
+          </button>
+        </div>
+
+        <div id="callerResultBox" class="sub-box hidden" aria-live="polite">
+          <div class="result-top compact">
+            <span id="callerBadge" class="risk-badge">تقييم المكالمة</span>
+            <strong id="callerScoreText"></strong>
+          </div>
+          <p id="callerVerdict" class="result-summary"></p>
+          <ul id="callerFindings" class="clean-list"></ul>
+          <div class="btn-row">
+            <button id="speakCallerBtn" class="btn btn-secondary" type="button">
+              🔊 قراءة تنبيه المكالمة
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div class="risk-meter-container">
-        <div class="risk-labels">
-          <span>مؤشر الخطورة المقدر</span>
-          <strong id="riskScoreText">0%</strong>
+      <div class="card">
+        <div class="card-header">
+          <h3>سجل البلاغات والأنماط الشائعة</h3>
+          <span id="reportsCountPill" class="pill">0 بلاغ</span>
         </div>
-        <div class="progress-bar">
-          <div id="riskBarFill" class="progress-fill"></div>
+        <p class="muted">
+          ملاحظة: يتم حفظ بلاغاتك محلياً في متصفحك لأغراض التوعية والاختبار؛ وللبلاغات الرسمية استخدم قنوات الجهات المختصة.
+        </p>
+        <div id="callerReportsList" class="reports-list"></div>
+      </div>
+    </section>
+
+    <!-- القسم الثالث: محاكي التدريب التفاعلي -->
+    <section id="simulatorTab" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <h2>محاكي «اختبر مناعتك الرقمية»</h2>
+          <div class="immunity-meter">
+            <span>نقاط المناعة:</span>
+            <strong id="immunityScore">0</strong>
+          </div>
+        </div>
+        <p class="muted">
+          تدرّب في بيئة آمنة على مواقف احتيال واقعية لتعرف كيف تتصرف قبل أن تواجهها في الواقع.
+        </p>
+
+        <div id="scenarioContainer" class="scenario-box"></div>
+
+        <div id="scenarioFeedback" class="sub-box hidden" aria-live="polite">
+          <h4 id="feedbackTitle"></h4>
+          <p id="feedbackText"></p>
+          <button id="nextScenarioBtn" class="btn btn-primary" type="button">السيناريو التالي ←</button>
         </div>
       </div>
+    </section>
 
-      <div class="result-grid">
-        <div class="info-box">
-          <h3>🧠 لماذا هذه النتيجة؟ (تحليل الروابط والمحتوى)</h3>
-          <ul id="reasonsList"></ul>
+    <!-- القسم الرابع: بروتوكول الطوارئ -->
+    <section id="emergencyTab" class="tab-panel">
+      <div class="card emergency-card">
+        <div class="card-header">
+          <h2>بروتوكول الطوارئ — ماذا تفعل في أول 5 دقائق؟</h2>
+          <span class="pill pill-danger">⚡ استجابة سريعة</span>
         </div>
+        <p class="muted">
+          إذا ضغطت على رابط مشبوه، أو أدخلت بياناتك، أو أعطيت رمز التحقق (OTP) لمحتال، نفّذ هذه الخطوات فوراً:
+        </p>
 
-        <div class="info-box advice-box">
-          <h3>🛡️ كيف تتصرف الآن؟</h3>
-          <ul id="adviceList"></ul>
+        <ol class="steps-list">
+          <li>
+            <strong>أوقف الحساب أو البطاقة فوراً:</strong> اتصل ببنكك عبر الرقم الرسمي المعتمد من بطاقتك أو التطبيق الرسمي لتجميد البطاقة أو الحساب.
+          </li>
+          <li>
+            <strong>غيّر كلمات المرور وفعّل التحقق بخطوتين (2FA):</strong> غيّر كلمة مرور بريدك الإلكتروني وحساباتك المهمة فوراً، ولا تعِد استخدام كلمة مرور قديمة.
+          </li>
+          <li>
+            <strong>لا ترسل أي رموز أو أموال إضافية:</strong> تجاهل أي تواصل لاحق يدّعي أنه «يسترجع المبلغ» أو «يصحح الخطأ».
+          </li>
+          <li>
+            <strong>احفظ الأدلة وأبلّغ الجهات الرسمية:</strong> التقط لقطات شاشة للرسائل والروابط والأرقام، وأبلّغ عبر القنوات الرسمية المعتمدة في دولة الإمارات.
+          </li>
+        </ol>
+
+        <div class="official-links">
+          <h3>قنوات الإبلاغ والتوعية الرسمية في الإمارات</h3>
+          <div class="links-grid">
+            <a class="link-card" href="https://www.adpolice.gov.ae" target="_blank" rel="noopener noreferrer">
+              <strong>شرطة أبوظبي (Abu Dhabi Police)</strong>
+              <span>الموقع الرسمي والخدمات الشرطية (أمان / طوارئ 999)</span>
+            </a>
+            <a class="link-card" href="https://tdra.gov.ae" target="_blank" rel="noopener noreferrer">
+              <strong>هيئة تنظيم الاتصالات والحكومة الرقمية (TDRA)</strong>
+              <span>إرشادات الأمن السيبراني ومكافحة الاحتيال</span>
+            </a>
+            <a class="link-card" href="https://u.ae" target="_blank" rel="noopener noreferrer">
+              <strong>البوابة الرسمية لحكومة الإمارات (U.AE)</strong>
+              <span>دليل الخدمات الحكومية والجهات المعتمدة (.gov.ae)</span>
+            </a>
+          </div>
         </div>
-      </div>
-
-      <div id="piiBox" class="pii-alert hidden"></div>
-
-      <div class="report-footer">
-        <p>هل رصدت رابطاً أو موقعاً وهمياً؟ ساهم في حماية المجتمع بالإبلاغ الفوري:</p>
-        <a href="https://www.adpolice.gov.ae" target="_blank" rel="noopener noreferrer" class="report-btn">
-          📢 التوجه لقنوات الإبلاغ الرسمية (خدمة أمان - شرطة أبوظبي)
-        </a>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>تم التطوير ضمن هاكاثون SCAMSHIELD AI — فريق تأكّد AI (2026)</p>
+    <div class="container footer-inner">
+      <span>تأكّد AI — فريق سنا حكمت، أم سلمة هشام، وحنان خالد | هاكاثون SCAMSHIELD AI</span>
+      <span id="liveStatusText">حالة الخصوصية: يعمل محلياً في المتصفح</span>
+    </div>
   </footer>
 
   <script src="app.js"></script>
