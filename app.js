@@ -183,17 +183,40 @@
 
     const suspiciousTlds = [".xyz", ".top", ".click", ".gq", ".tk", ".ml", ".ga", ".cf", ".rest"];
     const shorteners = ["bit.ly", "tinyurl.com", "t.co", "rb.gy", "cutt.ly"];
+    const trustedGovSuffix = ".gov.ae";
+
     urls.forEach((u) => {
       const uLower = u.toLowerCase();
-      if (suspiciousTlds.some((tld) => uLower.includes(tld))) {
-        score += 25;
-        reasons.push(`الرابط يستخدم نطاقاً (${u}) شائعاً في الروابط المشبوهة أو غير المعتادة.`);
+      let host = "";
+      try {
+        host = new URL(uLower).hostname;
+      } catch {
+        host = uLower;
       }
-      if (shorteners.some((s) => uLower.includes(s))) {
+
+      const isTrustedGov = host === "gov.ae" || host.endsWith(trustedGovSuffix);
+      const hasImpersonationTrick =
+        isTrustedGov && (host.includes("gov-ae") || host.includes("govae") || uLower.includes("@"));
+
+      if (isTrustedGov && !hasImpersonationTrick && !uLower.startsWith("http://")) {
+        reasons.push(`الرابط يرتبط بنطاق حكومي إماراتي رسمي (${host})؛ مع ذلك يُنصح دائماً بالتحقق من صحة الصفحة قبل إدخال أي بيانات.`);
+        return;
+      }
+
+      if (hasImpersonationTrick) {
+        score += 30;
+        reasons.push(`الرابط يحاول محاكاة نطاق حكومي إماراتي (.gov.ae) بطريقة قد تكون خادعة (${host}).`);
+      }
+
+      if (suspiciousTlds.some((tld) => host.endsWith(tld) || uLower.includes(tld))) {
+        score += 25;
+        reasons.push(`الرابط يستخدم نطاقاً (${host}) شائعاً في الروابط المشبوهة أو غير المعتادة.`);
+      }
+      if (shorteners.some((s) => host === s || host.endsWith("." + s) || uLower.includes(s))) {
         score += 20;
         reasons.push("يحتوي على رابط مختصر يخفي الوجهة النهائية الحقيقية.");
       }
-      if (!uLower.includes(".gov.ae") && (lower.includes("حكوم") || lower.includes("شرط") || lower.includes("هوي") || lower.includes("وزارة"))) {
+      if (!isTrustedGov && (lower.includes("حكوم") || lower.includes("شرط") || lower.includes("هوي") || lower.includes("وزارة"))) {
         score += 25;
         reasons.push("يذكر جهة رسمية أو هوية دون استخدام نطاق حكومي إماراتي معتمد (.gov.ae).");
       }
@@ -336,179 +359,3 @@
 
   function renderReports() {
     const list = getSavedReports();
-    reportsCountPill.textContent = `${list.length} بلاغ`;
-    callerReportsList.innerHTML = "";
-
-    list.forEach((item) => {
-      const div = document.createElement("div");
-      div.className = "report-item";
-      div.innerHTML = `
-        <div>
-          <strong>${escapeHtml(item.number)}</strong> — <span>${escapeHtml(item.behavior)}</span>
-          <div class="muted">${escapeHtml(item.notes || "")}</div>
-        </div>
-        <span class="risk-badge badge-high">${escapeHtml(item.risk || "مرتفعة")}</span>
-      `;
-      callerReportsList.appendChild(div);
-    });
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function evaluateCaller() {
-    const num = phoneInput.value.trim();
-    const behavior = callBehaviorSelect.value;
-    const notes = callNotesInput.value.trim();
-
-    if (!num && behavior === "normal_inquiry") {
-      alert("أدخل الرقم أو اختر سلوك المكالمة للفحص.");
-      return;
-    }
-
-    let score = 10;
-    const findings = [];
-
-    const cleanNum = num.replace(/\s+/g, "");
-    const isInternational = cleanNum.startsWith("+") && !cleanNum.startsWith("+971");
-    if (isInternational && (behavior === "id_update" || behavior === "otp" || behavior === "threat")) {
-      score += 35;
-      findings.push("رقم دولي خارج الإمارات يرتبط بادعاء صفة رسمية أو طلب بيانات حساسة.");
-    } else if (isInternational) {
-      score += 15;
-      findings.push("الرقم يحمل رمز اتصال دولياً؛ تحقق من سبب الاتصال قبل التفاعل.");
-    }
-
-    if (behavior === "otp") {
-      score += 55;
-      findings.push("طلب رمز التحقق (OTP) أو بيانات البطاقة عبر مكالمة هو مؤشر احتيال واضح.");
-    } else if (behavior === "id_update") {
-      score += 50;
-      findings.push("ادعاء تحديث الهوية أو مخالفة عبر مكالمة غير متوقعة يستدعي التحقق عبر القنوات الرسمية.");
-    } else if (behavior === "threat") {
-      score += 45;
-      findings.push("استخدام التهديد بالإيقاف الفوري أسلوب شائع للضغط على المتصل به.");
-    } else if (behavior === "prize_loan") {
-      score += 35;
-      findings.push("وعود الجوائز أو القروض السريعة المقرونة بطلب بيانات أو رسوم مؤشر خطر.");
-    } else {
-      findings.push("سلوك المكالمة لا يتضمن طلب بيانات سرية أو تهديداً مباشراً في المدخلات.");
-    }
-
-    const saved = getSavedReports();
-    const matched = saved.find((r) => num && r.number.replace(/\s+/g, "") === cleanNum);
-    if (matched) {
-      score += 20;
-      findings.push("هذا الرقم مسجل مسبقاً ضمن سجل البلاغات المحلية في المتصفح.");
-    }
-
-    if (notes) {
-      findings.push(`ملاحظتك المسجلة: ${notes}`);
-    }
-
-    if (score > 100) score = 100;
-
-    callerResultBox.classList.remove("hidden");
-    let badgeClass = "badge-low";
-    let badgeText = "منخفضة الخطورة";
-    let verdict = "لا توجد مؤشرات خطورة عالية في المدخلات، مع ضرورة عدم مشاركة أي بيانات سرية.";
-
-    if (score >= 55) {
-      badgeClass = "badge-high";
-      badgeText = "عالية الخطورة";
-      verdict = "تحذير: توجد مؤشرات قوية على مكالمة احتيالية. أنهِ المكالمة ولا تشارك أي رمز أو بيانات.";
-    } else if (score >= 25) {
-      badgeClass = "badge-med";
-      badgeText = "متوسطة الخطورة";
-      verdict = "تنبيه: المكالمة تتطلب حذراً وتحققاً مستقلاً عبر الأرقام الرسمية المعتمدة.";
-    }
-
-    callerBadge.className = `risk-badge ${badgeClass}`;
-    callerBadge.textContent = badgeText;
-    callerScoreText.textContent = `مؤشر الخطورة: ${score}%`;
-    callerVerdict.textContent = verdict;
-
-    callerFindings.innerHTML = "";
-    findings.forEach((f) => {
-      const li = document.createElement("li");
-      li.textContent = f;
-      callerFindings.appendChild(li);
-    });
-
-    lastCallerSpeech = `${badgeText}. ${verdict}`;
-  }
-
-  checkCallerBtn.addEventListener("click", evaluateCaller);
-
-  reportCallerBtn.addEventListener("click", () => {
-    const num = phoneInput.value.trim();
-    if (!num) {
-      alert("أدخل الرقم المراد تسجيل بلاغ عنه في السجل المحلي.");
-      return;
-    }
-    const behaviorText = callBehaviorSelect.options[callBehaviorSelect.selectedIndex].text;
-    const notesText = callNotesInput.value.trim() || "بلاغ مضاف من واجهة الفحص.";
-    const current = getSavedReports();
-    current.unshift({
-      number: num,
-      behavior: behaviorText,
-      risk: "مرتفعة",
-      notes: notesText
-    });
-    saveReports(current);
-    renderReports();
-    alert("تمت إضافة البلاغ إلى السجل المحلي.");
-  });
-
-  speakCallerBtn.addEventListener("click", () => speakArabic(lastCallerSpeech));
-
-  // محاكي المناعة الرقمية
-  function renderScenario() {
-    const item = SCENARIOS[scenarioIndex % SCENARIOS.length];
-    scenarioFeedback.classList.add("hidden");
-
-    const optionsHtml = item.options
-      .map(
-        (opt, idx) =>
-          `<button class="option-btn" type="button" data-opt-idx="${idx}">${escapeHtml(opt.text)}</button>`
-      )
-      .join("");
-
-    scenarioContainer.innerHTML = `
-      <h3>${escapeHtml(item.title)}</h3>
-      <div class="scenario-message">${escapeHtml(item.context)}</div>
-      <div class="options-grid">${optionsHtml}</div>
-    `;
-
-    scenarioContainer.querySelectorAll(".option-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const chosen = item.options[Number(btn.dataset.optIdx)];
-        scenarioContainer.querySelectorAll(".option-btn").forEach((b) => (b.disabled = true));
-        scenarioFeedback.classList.remove("hidden");
-
-        if (chosen.safe) {
-          immunityPoints += 25;
-          immunityScoreEl.textContent = String(immunityPoints);
-          feedbackTitle.textContent = "✅ قرار آمن (+25 نقطة مناعة)";
-        } else {
-          feedbackTitle.textContent = "⚠️ وقعت في فخ المحاكاة — تعلّم السبب";
-        }
-        feedbackText.textContent = chosen.explain;
-      });
-    });
-  }
-
-  nextScenarioBtn.addEventListener("click", () => {
-    scenarioIndex += 1;
-    renderScenario();
-  });
-
-  // تهيئة أولية
-  renderReports();
-  renderScenario();
-})();
